@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Chat — Messagerie</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+	<style>
+	/* Layout spécifique à la page chat : faire occuper la zone restante */
+	html, body { height: 100%; }
+	body { display: flex; flex-direction: column; }
+
+	/* conteneur principal juste sous la navbar : on force la hauteur restante via calc
+	   56px est la hauteur approximative du navbar Bootstrap ; si votre navbar est
+	   plus grande, augmentez cette valeur */
+	.container-fluid.chat-root { flex: 1 1 auto; display: flex; height: calc(100vh - 56px); }
+
+	/* faire la ligne occuper toute la hauteur restante */
+	.row.chat-row { flex: 1 1 auto; display: flex; width:100%; }
+
+	/* sidebar scrollable and fixed width; main takes remaining width */
+	aside.sidebar { overflow: auto; flex: 0 0 220px; max-width: 300px; }
+
+	/* ensure main uses all remaining horizontal space */
+	main.chat-main { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+
+	/* main doit prendre le reste et organiser la carte en colonne */
+	main.chat-main { display: flex; flex-direction: column; }
+
+	/* la carte principale prend toute la hauteur du main */
+	.main-card { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+
+	/* corps de la carte (messages + form) : colonne et permettre overflow correct */
+	.card-body.chat-body { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+
+	/* messages prennent tout l'espace disponible */
+	#msgs { flex:1 1 auto; min-height:0; overflow:auto; }
+	</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Messagerie</a>
+		<div class="d-flex align-items-center" style="color:rgb(0, 17, 255)">
+			{% if user %}
+				<span class="me-3">Connecté en tant que <strong>{{ user }}</strong></span>
+				<a class="btn btn-sm btn-outline-secondary" href="{{ url_for('logout') }}">Se déconnecter</a>
+			{% else %}
+				<a class="btn btn-sm btn-primary" href="{{ url_for('login') }}">Se connecter</a>
+			{% endif %}
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid ml-3 mt-3 mb-3 chat-root">
+	<div class="row chat-row">
+		<!-- Sidebar groupes -->
+	<aside class="col-md-3 col-12">
+			<div class="card h-100">
+				<div class="card-header">Groupes</div>
+				<ul class="list-group list-group-flush" id="groups-list">
+					{% for g in groups|default([]) %}
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							<a href="#" onclick="openGroup({{ g[0] }}); return false;" class="stretched-link">{{ g[1] }}</a>
+							<small class="text-muted">#{{ g[0] }}</small>
+						</li>
+					{% else %}
+						<li class="list-group-item text-muted">Aucun groupe</li>
+					{% endfor %}
+				</ul>
+				<div class="card-body">
+					<form method="post" action="{{ url_for('create_group') }}" class="d-flex" id="createGroupForm">
+						<input name="name" class="form-control form-control-sm me-2" placeholder="Nouveau groupe" required>
+						<button class="btn btn-sm btn-success" type="submit">Créer</button>
+					</form>
+				</div>
+			</div>
+		</aside>
+
+		<!-- Zone de chat -->
+		<main class="col-md-9 col-12 chat-main">
+			<div class="card shadow-sm main-card">
+				<div class="card-header d-flex flex-md-column justify-content-between align-items-center">
+					<h5 class="mb-0" style="color:rgb(255, 0, 0)">Conversation</h5>
+				</div>
+
+				<div class="card-body p-0 d-flex flex-column chat-body">
+					<!-- Messages (remplis dynamiquement par script.js) -->
+					<div id="msgs" class="flex-grow-1 overflow-auto p-3 bg-light">
+						<div class="text-center text-muted mt-4">Sélectionnez un groupe à gauche pour charger ses messages.</div>
+					</div>
+
+					<!-- Formulaire d'envoi (le JS attend les ids: sendForm, msg, file, mic) -->
+					<form id="sendForm" class="p-3 border-top bg-white" method="post" action="{{ url_for('send') }}" enctype="multipart/form-data">
+						<div class="row g-2 align-items-center">
+							<div class="col">
+								<!-- Champ texte (id attendu: msg) -->
+								<textarea name="msg" id="msg" class="form-control" rows="2" placeholder="Écrire un message..."></textarea>
+							</div>
+							<div class="col-auto d-flex flex-column align-items-end">
+								<div class="mb-2">
+									<input type="file" name="file" id="file" class="form-control form-control-sm">
+								</div>
+								<div class="d-flex">
+									<button type="submit" class="btn btn-primary me-2">Envoyer</button>
+									<button type="button" id="clear-btn" class="btn btn-outline-secondary me-2">Effacer</button>
+									<!-- Bouton micro pour enregistrer un vocal (script.js gère mousedown/mouseup) -->
+									<button type="button" id="mic" class="btn btn-warning">🎤</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
+	</div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

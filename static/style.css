@@ -1,0 +1,26 @@
+body { margin:0; font-family:Arial; background:#0f172a; color:white }
+.center { display:flex; justify-content:center; align-items:center; height:100vh }
+.card { background:#1e293b; padding:20px; border-radius:10pxv }
+
+input,button {
+width:100%; padding:10px; margin:5px 0;
+border:none; border-radius:6px
+}
+
+button { background:#22c55e; color:black }
+
+.app { display:flex; height:100vh }
+
+.sidebar {
+width:30%; background:#020617; padding:10px
+}
+
+.chat { width:70%; display:flex; flex-direction:column }
+
+#msgs {
+flex:1; overflow:auto; padding:10px
+}
+
+.msg { margin:5px; background:#22c55e; color:black; padding:8px; border-radius:8px }
+
+form { display:flex; gap:5px }
