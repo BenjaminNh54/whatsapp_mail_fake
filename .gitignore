@@ -2,3 +2,4 @@ uploads
 __pycache__
 EF (1).txt
 chat.db
+.env
