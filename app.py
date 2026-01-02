@@ -386,3 +386,15 @@ def delete_group(group_id):
 # ---------------- RUN ----------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=True)
+
+#Anti-Sleep :
+URL="https://whatsapp-mail-fake.onrender.com/login"
+import threading
+def anti_sleep():
+    while True:
+        try:
+            requests.get(URL)
+        except:
+            pass
+        time.sleep(300)  # toutes les 5 minutes
+threading.Thread(target=anti_sleep, daemon=True).start()
