@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Compte banni</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+.center {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.box {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+}
+h1 { color: red; }
+</style>
+</head>
+<body>
+
+<div class="center">
+    <div class="box">
+        <h1>🚫 Compte banni</h1>
+        <p>Votre compte a été banni par un administrateur.</p>
+        <p>Votre compte est temporairement ou définitivement banni. Parlez en à un administrateur.</p>
+        <p>Si vous pensez qu’il s’agit d’une erreur, contactez un administrateur.</p>
+        <a href="/logout">
+            <button>Se déconnecter</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

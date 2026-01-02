@@ -46,6 +46,9 @@
 		<div class="d-flex align-items-center" style="color:rgb(0, 17, 255)">
 			{% if user %}
 				<span class="me-3">Connecté en tant que <strong>{{ user }}</strong></span>
+				<!--On va afficher le nombre de crédits restants -->
+				<span class="me-3">Crédits restants : <strong>{{ credits }}</strong></span>
+				
 				<a class="btn btn-sm btn-outline-secondary" href="{{ url_for('logout') }}">Se déconnecter</a>
 			{% else %}
 				<a class="btn btn-sm btn-primary" href="{{ url_for('login') }}">Se connecter</a>
@@ -56,10 +59,9 @@
 
 <div class="container-fluid ml-3 mt-3 mb-3 chat-root">
 	<div class="row chat-row">
-		<!-- Sidebar groupes -->
 	<aside class="col-md-3 col-12">
 			<div class="card h-100">
-				<div class="card-header">Groupes</div>
+				<div class="card-header" style="color: rgb(255, 0, 0);">Groupes :</div>
 				<ul class="list-group list-group-flush" id="groups-list">
 					{% for g in groups|default([]) %}
 						<li class="list-group-item d-flex justify-content-between align-items-center">
@@ -79,7 +81,7 @@
 			</div>
 		</aside>
 
-		<!-- Zone de chat -->
+
 		<main class="col-md-9 col-12 chat-main">
 			<div class="card shadow-sm main-card">
 				<div class="card-header d-flex flex-md-column justify-content-between align-items-center">
@@ -87,16 +89,15 @@
 				</div>
 
 				<div class="card-body p-0 d-flex flex-column chat-body">
-					<!-- Messages (remplis dynamiquement par script.js) -->
+
 					<div id="msgs" class="flex-grow-1 overflow-auto p-3 bg-light">
 						<div class="text-center text-muted mt-4">Sélectionnez un groupe à gauche pour charger ses messages.</div>
 					</div>
 
-					<!-- Formulaire d'envoi (le JS attend les ids: sendForm, msg, file, mic) -->
 					<form id="sendForm" class="p-3 border-top bg-white" method="post" action="{{ url_for('send') }}" enctype="multipart/form-data">
 						<div class="row g-2 align-items-center">
 							<div class="col">
-								<!-- Champ texte (id attendu: msg) -->
+
 								<textarea name="msg" id="msg" class="form-control" rows="2" placeholder="Écrire un message..."></textarea>
 							</div>
 							<div class="col-auto d-flex flex-column align-items-end">
@@ -106,7 +107,7 @@
 								<div class="d-flex">
 									<button type="submit" class="btn btn-primary me-2">Envoyer</button>
 									<button type="button" id="clear-btn" class="btn btn-outline-secondary me-2">Effacer</button>
-									<!-- Bouton micro pour enregistrer un vocal (script.js gère mousedown/mouseup) -->
+
 									<button type="button" id="mic" class="btn btn-warning">🎤</button>
 								</div>
 							</div>
@@ -118,8 +119,11 @@
 	</div>
 </div>
 
-<!-- Scripts -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+
+
+

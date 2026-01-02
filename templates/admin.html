@@ -1,0 +1,174 @@
+<!--<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Panneau Admin</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<h1>Panneau Admin</h1>
+
+<h2>Utilisateurs</h2>
+<table border="1">
+<tr><th>ID</th><th>Username</th><th>Role</th><th>Actions</th></tr>
+{% for u in users %}
+<tr>
+<td>{{ u[0] }}</td>
+<td>{{ u[1] }}</td>
+<td>{{ u[2] }}</td>
+<td>
+
+<form method="post" action="{{ url_for('delete_user', user_id=u[0]) }}" style="display:inline;">
+    <button type="submit">Supprimer</button>
+</form>
+
+
+{% if u[2] != 'banned' %}
+<form method="post" action="{{ url_for('ban_user', user_id=u[0]) }}" style="display:inline;">
+    <button type="submit">Ban</button>
+</form>
+{% else %}
+<form method="post" action="{{ url_for('unban_user', user_id=u[0]) }}" style="display:inline;">
+    <button type="submit">Unban</button>
+</form>
+{% endif %}
+<form method="post" action="/admin/tempban_user/{{ u[0] }}">
+    <input type="text" name="duration" placeholder="ex: 1h, 2j, 3a" required>
+    <button type="submit">Ban temporaire</button>
+</form>
+
+
+<form method="post" action="{{ url_for('change_role', user_id=u[0]) }}" style="display:inline;">
+    <button type="submit">Changer rôle</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Groupes</h2>
+<table border="1">
+<tr><th>ID</th><th>Nom</th><th>Actions</th></tr>
+{% for g in groups %}
+<tr>
+<td>{{ g[0] }}</td>
+<td>{{ g[1] }}</td>
+<td>
+
+<form method="post" action="{{ url_for('delete_group', group_id=g[0]) }}" style="display:inline;">
+    <button type="submit">Supprimer</button>
+</form>
+
+
+<form method="post" action="{{ url_for('delete_msgs', group_id=g[0]) }}" style="display:inline;">
+    <button type="submit">Supprimer messages</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<div id="extra-admin-actions">
+
+</div>
+
+<a href="{{ url_for('index') }}">Retour au chat</a>
+</body>
+</html>
+-->
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Panneau Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>🛠️ Panneau Admin</h1>
+
+<h2>Utilisateurs</h2>
+<table border="1" cellpadding="5">
+<tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Rôle</th>
+    <th>Actions</th>
+</tr>
+
+{% for u in users %}
+<tr>
+    <td>{{ u[0] }}</td>
+    <td>{{ u[1] }}</td>
+    <td>{{ u[2] }}</td>
+    <td>
+
+        <!-- BAN PERMANENT -->
+        <form method="post" action="{{ url_for('ban_user', user_id=u[0]) }}" style="display:inline;">
+            <button>Ban</button>
+        </form>
+
+        <!-- TEMP BAN -->
+        <form method="post" action="{{ url_for('tempban_user', user_id=u[0]) }}" style="display:inline;">
+            <input name="duration" placeholder="ex: 2h, 3j, 1mo" size="10">
+            <button>Temp Ban</button>
+        </form>
+
+        <!-- UNBAN -->
+        <form method="post" action="{{ url_for('unban_user', user_id=u[0]) }}" style="display:inline;">
+            <button>Unban</button>
+        </form>
+
+        <!-- CHANGE ROLE -->
+        <form method="post" action="{{ url_for('change_role', user_id=u[0]) }}" style="display:inline;">
+            <button>Admin/User</button>
+        </form>
+
+        <!-- DELETE USER -->
+        <form method="post" action="{{ url_for('delete_user', user_id=u[0]) }}" style="display:inline;">
+            <button style="color:red;">Supprimer</button>
+        </form>
+
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<hr>
+
+<h2>Groupes</h2>
+<table border="1" cellpadding="5">
+<tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Actions</th>
+</tr>
+
+{% for g in groups %}
+<tr>
+    <td>{{ g[0] }}</td>
+    <td>{{ g[1] }}</td>
+    <td>
+
+        <!-- DELETE MSGS -->
+        <form method="post" action="{{ url_for('delete_msgs', group_id=g[0]) }}" style="display:inline;">
+            <button>Supprimer messages</button>
+        </form>
+
+        <!-- DELETE GROUP -->
+        <form method="post" action="{{ url_for('delete_group', group_id=g[0]) }}" style="display:inline;">
+            <button style="color:red;">Supprimer groupe</button>
+        </form>
+
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<a href="/admin/credit_requests" style="color: azure;">Voir les demandes de crédits</a><br><br>
+<a href="/" style="color: azure;">⬅ Retour au chat</a>
+
+</body>
+</html>
